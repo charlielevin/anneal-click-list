@@ -1,0 +1,786 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#f7c948">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Anneal List">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>Anneal Click-List</title>
+    <style>
+:root {
+  color-scheme: light;
+  --bg: #f6f4ee;
+  --surface: #ffffff;
+  --ink: #17201c;
+  --muted: #5b665f;
+  --border: #d9ded8;
+  --accent: #0f766e;
+  --accent-dark: #115e59;
+  --yellow: #fff3bf;
+  --yellow-border: #f2c94c;
+  --warn: #8a3b12;
+  --warn-bg: #fff1e8;
+  --shadow: 0 12px 28px rgba(23, 32, 28, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: 18px;
+  line-height: 1.45;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  min-height: 48px;
+  border: 0;
+  cursor: pointer;
+}
+
+.app-shell {
+  width: min(100%, 780px);
+  margin: 0 auto;
+  padding: 18px 14px calc(36px + env(safe-area-inset-bottom));
+}
+
+.page-header {
+  padding: 10px 2px 12px;
+}
+
+.eyebrow {
+  margin: 0 0 4px;
+  color: var(--accent-dark);
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 8px;
+  font-size: 2.35rem;
+  line-height: 1.05;
+  letter-spacing: 0;
+}
+
+h2 {
+  margin-bottom: 0;
+  font-size: 1.3rem;
+  letter-spacing: 0;
+}
+
+.subtitle {
+  max-width: 34rem;
+  margin-bottom: 0;
+  color: var(--muted);
+}
+
+.safety-box,
+.section-card,
+.warning-list {
+  margin-top: 14px;
+  border-radius: 8px;
+}
+
+.safety-box {
+  padding: 16px;
+  border: 2px solid var(--yellow-border);
+  background: var(--yellow);
+}
+
+.safety-box h2 {
+  margin-bottom: 8px;
+}
+
+.safety-box p {
+  margin-bottom: 6px;
+  font-weight: 650;
+}
+
+.safety-box p:last-child {
+  margin-bottom: 0;
+}
+
+.section-card {
+  padding: 16px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.section-number {
+  display: inline-grid;
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.field {
+  display: grid;
+  gap: 7px;
+}
+
+.field span {
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 750;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-height: 52px;
+  padding: 12px 13px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--ink);
+  font-size: 1.08rem;
+}
+
+.field input:focus,
+.field select:focus {
+  border-color: var(--accent);
+  outline: 3px solid rgba(15, 118, 110, 0.18);
+}
+
+.field-wide {
+  margin-bottom: 12px;
+}
+
+.preset-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.preset {
+  padding: 10px 8px;
+  border-radius: 8px;
+  background: #e7f5f2;
+  color: var(--accent-dark);
+  font-weight: 800;
+}
+
+.preset:active {
+  transform: translateY(1px);
+}
+
+.status-note {
+  min-height: 26px;
+  margin-bottom: 12px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.status-note.error {
+  color: var(--warn);
+}
+
+.manual-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.warning-list {
+  display: none;
+  padding: 14px 16px;
+  border: 2px solid #f4a261;
+  background: var(--warn-bg);
+  color: var(--warn);
+  font-weight: 800;
+}
+
+.warning-list.visible {
+  display: grid;
+  gap: 8px;
+}
+
+.parameter-output {
+  margin: 0;
+  overflow-x: auto;
+  white-space: pre;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 1.02rem;
+  line-height: 1.55;
+}
+
+.conversion-note,
+.plain-note,
+.home-note {
+  margin-top: 12px;
+  margin-bottom: 0;
+  color: var(--muted);
+  font-weight: 650;
+}
+
+.conversion-note {
+  display: none;
+  padding: 12px;
+  border-left: 5px solid var(--accent);
+  background: #edf7f5;
+  color: var(--ink);
+}
+
+.conversion-note.visible {
+  display: block;
+}
+
+.click-list {
+  margin: 0;
+  padding-left: 1.45rem;
+}
+
+.click-list li {
+  margin-bottom: 13px;
+  padding-left: 3px;
+}
+
+.click-list li:last-child {
+  margin-bottom: 0;
+}
+
+.verify-copy p,
+.eta-output p {
+  margin-bottom: 10px;
+}
+
+.verify-copy p:last-child,
+.eta-output p:last-child {
+  margin-bottom: 0;
+}
+
+.button-reference {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.button-reference div {
+  display: grid;
+  grid-template-columns: 138px 1fr;
+  gap: 10px;
+  align-items: start;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.button-reference div:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.button-reference dt {
+  font-weight: 850;
+}
+
+.button-reference dd {
+  margin: 0;
+  color: var(--muted);
+}
+
+@media (min-width: 680px) {
+  .app-shell {
+    padding-top: 28px;
+  }
+
+  .manual-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .preset-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 390px) {
+  body {
+    font-size: 17px;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  .section-card,
+  .safety-box {
+    padding: 14px;
+  }
+
+  .button-reference div {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+}
+
+    </style>
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="page-header">
+        <p class="eyebrow">Lindberg furnace helper</p>
+        <h1>Anneal Click-List</h1>
+        <p class="subtitle">Enter the anneal you want, then follow the exact controller settings and button sequence.</p>
+      </header>
+
+      <section class="safety-box" aria-label="Safety warning">
+        <h2>Safety</h2>
+        <p>Confirm your lab SOP, O2 flow, tube, boat, sample, and furnace rating before running.</p>
+        <p>Do not leave unattended unless your lab allows it.</p>
+        <p>For oxygen anneals, do not change O2 flow unless the lab procedure says to.</p>
+      </section>
+
+      <section class="section-card" aria-labelledby="want-heading">
+        <div class="section-heading">
+          <span class="section-number">1</span>
+          <h2 id="want-heading">What do you want?</h2>
+        </div>
+
+        <label class="field field-wide" for="naturalInput">
+          <span>Natural text</span>
+          <input id="naturalInput" type="text" inputmode="text" autocomplete="off" placeholder="900C for 2 hr">
+        </label>
+
+        <div class="preset-grid" aria-label="Quick presets">
+          <button type="button" class="preset" data-preset-temp="700" data-preset-time="1" data-preset-unit="hours">700C, 1 hr</button>
+          <button type="button" class="preset" data-preset-temp="900" data-preset-time="2" data-preset-unit="hours">900C, 2 hr</button>
+          <button type="button" class="preset" data-preset-temp="950" data-preset-time="1" data-preset-unit="hours">950C, 1 hr</button>
+          <button type="button" class="preset" data-preset-temp="1200" data-preset-time="30" data-preset-unit="minutes">1200C, 30 min</button>
+        </div>
+
+        <div id="parseStatus" class="status-note" role="status" aria-live="polite"></div>
+
+        <div class="manual-grid">
+          <label class="field" for="targetTemp">
+            <span>Target PL1 (C)</span>
+            <input id="targetTemp" type="number" inputmode="decimal" min="0" step="1">
+          </label>
+
+          <label class="field" for="holdTime">
+            <span>Hold time</span>
+            <input id="holdTime" type="number" inputmode="decimal" min="0" step="0.1">
+          </label>
+
+          <label class="field" for="holdUnit">
+            <span>Hold unit</span>
+            <select id="holdUnit">
+              <option value="hours">hours</option>
+              <option value="minutes">minutes</option>
+            </select>
+          </label>
+
+          <label class="field" for="rampRate">
+            <span>Ramp Pr1/Pr2 (C/min)</span>
+            <input id="rampRate" type="number" inputmode="decimal" min="0" step="0.1">
+          </label>
+
+          <label class="field" for="cooldownTarget">
+            <span>Cooldown PL2 (C)</span>
+            <input id="cooldownTarget" type="number" inputmode="decimal" step="1">
+          </label>
+
+          <label class="field" for="programNumber">
+            <span>Program Pnr</span>
+            <input id="programNumber" type="number" inputmode="numeric" min="1" step="1">
+          </label>
+
+          <label class="field" for="currentPv">
+            <span>Current PV (C)</span>
+            <input id="currentPv" type="number" inputmode="decimal" step="1">
+          </label>
+        </div>
+      </section>
+
+      <section id="warnings" class="warning-list" aria-live="polite"></section>
+
+      <section class="section-card" aria-labelledby="params-heading">
+        <div class="section-heading">
+          <span class="section-number">2</span>
+          <h2 id="params-heading">Exact Parameter List</h2>
+        </div>
+        <pre id="parameterList" class="parameter-output"></pre>
+        <div id="conversionNote" class="conversion-note"></div>
+      </section>
+
+      <section class="section-card" aria-labelledby="click-heading">
+        <div class="section-heading">
+          <span class="section-number">3</span>
+          <h2 id="click-heading">Full Button-by-Button Click List</h2>
+        </div>
+        <ol id="clickList" class="click-list"></ol>
+      </section>
+
+      <section class="section-card" aria-labelledby="verify-heading">
+        <div class="section-heading">
+          <span class="section-number">4</span>
+          <h2 id="verify-heading">Verify While Running</h2>
+        </div>
+        <div id="verifyList" class="verify-copy"></div>
+      </section>
+
+      <section class="section-card" aria-labelledby="eta-heading">
+        <div class="section-heading">
+          <span class="section-number">5</span>
+          <h2 id="eta-heading">ETA Tool</h2>
+        </div>
+        <div id="etaOutput" class="eta-output"></div>
+        <p class="plain-note">Actual furnace heating can be slower at high temperature, so this is an ideal estimate.</p>
+      </section>
+
+      <section class="section-card" aria-labelledby="reference-heading">
+        <div class="section-heading">
+          <span class="section-number">6</span>
+          <h2 id="reference-heading">Button Reference</h2>
+        </div>
+        <dl class="button-reference">
+          <div><dt>P</dt><dd>enter/advance programming screens</dd></div>
+          <div><dt>Up / Down</dt><dd>change values</dd></div>
+          <div><dt>RUN/HOLD</dt><dd>start or hold program</dd></div>
+          <div><dt>Center display button</dt><dd>view status screens only; it is the paper/hand icon button</dd></div>
+        </dl>
+        <p class="home-note">To install on iPhone: Share -> Add to Home Screen.</p>
+      </section>
+    </main>
+    <script>
+(function () {
+  "use strict";
+
+  var storageKey = "anneal-click-list-values-v1";
+  var defaults = {
+    naturalInput: "900C for 2 hr",
+    targetTemp: 900,
+    holdTime: 2,
+    holdUnit: "hours",
+    rampRate: 10,
+    cooldownTarget: 20,
+    programNumber: 1,
+    currentPv: 50
+  };
+
+  var fields = {
+    naturalInput: document.getElementById("naturalInput"),
+    targetTemp: document.getElementById("targetTemp"),
+    holdTime: document.getElementById("holdTime"),
+    holdUnit: document.getElementById("holdUnit"),
+    rampRate: document.getElementById("rampRate"),
+    cooldownTarget: document.getElementById("cooldownTarget"),
+    programNumber: document.getElementById("programNumber"),
+    currentPv: document.getElementById("currentPv")
+  };
+
+  var parseStatus = document.getElementById("parseStatus");
+  var warnings = document.getElementById("warnings");
+  var parameterList = document.getElementById("parameterList");
+  var conversionNote = document.getElementById("conversionNote");
+  var clickList = document.getElementById("clickList");
+  var verifyList = document.getElementById("verifyList");
+  var etaOutput = document.getElementById("etaOutput");
+
+  function readStoredValues() {
+    try {
+      var stored = JSON.parse(localStorage.getItem(storageKey));
+      return stored && typeof stored === "object" ? stored : {};
+    } catch (error) {
+      return {};
+    }
+  }
+
+  function numberValue(id) {
+    var value = Number(fields[id].value);
+    return Number.isFinite(value) ? value : 0;
+  }
+
+  function currentValues() {
+    return {
+      naturalInput: fields.naturalInput.value,
+      targetTemp: numberValue("targetTemp"),
+      holdTime: numberValue("holdTime"),
+      holdUnit: fields.holdUnit.value,
+      rampRate: numberValue("rampRate"),
+      cooldownTarget: numberValue("cooldownTarget"),
+      programNumber: Math.round(numberValue("programNumber")),
+      currentPv: numberValue("currentPv")
+    };
+  }
+
+  function saveValues(values) {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(values));
+    } catch (error) {
+      // The app still works if storage is blocked.
+    }
+  }
+
+  function setFields(values) {
+    Object.keys(defaults).forEach(function (key) {
+      fields[key].value = values[key];
+    });
+  }
+
+  function formatHours(hours) {
+    if (!Number.isFinite(hours)) {
+      return "0";
+    }
+    if (Math.abs(hours - Math.round(hours)) < 0.0001) {
+      return hours.toFixed(1);
+    }
+    return String(Number(hours.toFixed(3)));
+  }
+
+  function parseNaturalText(text) {
+    var clean = text.toLowerCase().replace(/°/g, "").replace(/,/g, " ");
+    var temp = null;
+    var tempPatterns = [
+      /(\d+(?:\.\d+)?)\s*(?:c|deg|degree|degrees)\b/,
+      /(?:c|deg|degree|degrees)\s*(\d+(?:\.\d+)?)\b/
+    ];
+
+    tempPatterns.some(function (pattern) {
+      var match = clean.match(pattern);
+      if (match) {
+        temp = Number(match[1]);
+        return true;
+      }
+      return false;
+    });
+
+    if (temp === null) {
+      var numbers = clean.match(/\d+(?:\.\d+)?/g) || [];
+      var largeNumber = numbers.map(Number).find(function (value) {
+        return value > 100;
+      });
+      if (largeNumber !== undefined) {
+        temp = largeNumber;
+      }
+    }
+
+    var timeMatch = clean.match(/(\d+(?:\.\d+)?)\s*(hr|hrs|hour|hours|h|min|mins|minute|minutes|m)\b/);
+    var time = timeMatch ? Number(timeMatch[1]) : null;
+    var unit = null;
+    if (timeMatch) {
+      unit = /^m/.test(timeMatch[2]) ? "minutes" : "hours";
+    }
+
+    return {
+      targetTemp: temp,
+      holdTime: time,
+      holdUnit: unit,
+      complete: Number.isFinite(temp) && Number.isFinite(time) && Boolean(unit)
+    };
+  }
+
+  function applyParsedText() {
+    var text = fields.naturalInput.value.trim();
+    parseStatus.textContent = "";
+    parseStatus.classList.remove("error");
+    if (!text) {
+      return;
+    }
+
+    var parsed = parseNaturalText(text);
+    if (Number.isFinite(parsed.targetTemp)) {
+      fields.targetTemp.value = parsed.targetTemp;
+    }
+    if (Number.isFinite(parsed.holdTime)) {
+      fields.holdTime.value = parsed.holdTime;
+    }
+    if (parsed.holdUnit) {
+      fields.holdUnit.value = parsed.holdUnit;
+    }
+
+    if (parsed.complete) {
+      parseStatus.textContent = "Parsed: " + parsed.targetTemp + "C for " + parsed.holdTime + " " + parsed.holdUnit + ".";
+    } else {
+      parseStatus.textContent = "Could not fully parse. Please use manual fields.";
+      parseStatus.classList.add("error");
+    }
+  }
+
+  function buildWarnings(values) {
+    var result = [];
+    if (values.targetTemp > 1200) {
+      result.push("Warning: Confirm this furnace/tube/sample setup is rated above this temperature.");
+    }
+    if (values.targetTemp < 20) {
+      result.push("Warning: Target temperature is below 20C.");
+    }
+    if (values.holdTime <= 0) {
+      result.push("Warning: Hold time must be greater than 0.");
+    }
+    if (values.rampRate <= 0) {
+      result.push("Warning: Ramp rate must be greater than 0.");
+    }
+    return result;
+  }
+
+  function renderWarnings(items) {
+    warnings.innerHTML = "";
+    warnings.classList.toggle("visible", items.length > 0);
+    items.forEach(function (item) {
+      var div = document.createElement("div");
+      div.textContent = item;
+      warnings.appendChild(div);
+    });
+  }
+
+  function parameterText(values, dwellHours) {
+    return [
+      "Pnr = " + values.programNumber,
+      "",
+      "Pr1 = " + values.rampRate + "     ramp rate up, C/min",
+      "PL1 = " + values.targetTemp + "    anneal target, C",
+      "Pd1 = " + formatHours(dwellHours) + "    dwell time, hours",
+      "",
+      "Pr2 = " + values.rampRate + "     ramp rate down, C/min",
+      "PL2 = " + values.cooldownTarget + "     cooldown target, C",
+      "Pd2 = 0",
+      "",
+      "Pr3 = END"
+    ].join("\n");
+  }
+
+  function renderConversion(values, dwellHours) {
+    if (values.holdUnit !== "minutes") {
+      conversionNote.classList.remove("visible");
+      conversionNote.textContent = "";
+      return;
+    }
+    conversionNote.classList.add("visible");
+    conversionNote.innerHTML = "<strong>Note:</strong><br>" +
+      values.holdTime + " min / 60 = " + formatHours(dwellHours) + " hr.<br>" +
+      "Enter " + formatHours(dwellHours) + " on the controller, not " + values.holdTime + ".";
+  }
+
+  function renderClickList(values, dwellHours) {
+    var steps = [
+      "Hold P until Pnr appears.",
+      "Set Pnr = " + values.programNumber + " using Up / Down if needed.",
+      "Press P once. Screen should show Pr1. Set Pr1 = " + values.rampRate + ".",
+      "Press P once. Screen should show PL1. Set PL1 = " + values.targetTemp + ".",
+      "Press P once. Screen should show Pd1. Set Pd1 = " + formatHours(dwellHours) + " hours.",
+      "Press P once. Screen should show Pr2. Set Pr2 = " + values.rampRate + ".",
+      "Press P once. Screen should show PL2. Set PL2 = " + values.cooldownTarget + ".",
+      "Press P once. Screen should show Pd2. Set Pd2 = 0.",
+      "Press P once. Screen should show Pr3. Use Up / Down until it says END.",
+      "Press RUN/HOLD to start the program.",
+      "While running, only tap the center display button to view PV / SP / OP / TIME. Do not press Up / Down while running unless intentionally editing."
+    ];
+
+    clickList.innerHTML = "";
+    steps.forEach(function (step) {
+      var li = document.createElement("li");
+      li.textContent = step;
+      clickList.appendChild(li);
+    });
+  }
+
+  function renderVerify(values, dwellHours) {
+    verifyList.innerHTML = [
+      "<p><strong>During heat-up:</strong><br>RAMP 1 should be displayed. PV = actual furnace temperature, should climb. SP = setpoint, should climb toward " + values.targetTemp + "C. OP = output %, often near 100% during ramp.</p>",
+      "<p><strong>At target:</strong><br>Controller should automatically switch to DWELL 1 / HOLD. PV should be close to " + values.targetTemp + "C. SP should be close to " + values.targetTemp + "C. TIME should show about " + formatHours(dwellHours) + ".</p>",
+      "<p><strong>After dwell:</strong><br>Controller should automatically move to RAMP 2. Then cool toward " + values.cooldownTarget + "C. At the end, it should show END.</p>"
+    ].join("");
+  }
+
+  function renderEta(values) {
+    var remaining = values.targetTemp - values.currentPv;
+    if (values.rampRate <= 0) {
+      etaOutput.innerHTML = "<p>Enter a ramp rate greater than 0 to estimate ETA.</p>";
+      return;
+    }
+    if (remaining <= 0) {
+      etaOutput.innerHTML = "<p>Current PV is already at or above the target.</p>";
+      return;
+    }
+    var etaMinutes = remaining / values.rampRate;
+    var etaHours = etaMinutes / 60;
+    etaOutput.innerHTML = [
+      "<p>Current PV = " + values.currentPv + "C<br>Target = " + values.targetTemp + "C<br>Ramp rate = " + values.rampRate + "C/min</p>",
+      "<p>Remaining = " + Number(remaining.toFixed(2)) + "C<br>ETA = " + Number(etaMinutes.toFixed(1)) + " min<br>ETA = " + Number(etaHours.toFixed(2)) + " hr</p>"
+    ].join("");
+  }
+
+  function renderAll() {
+    var values = currentValues();
+    var dwellHours = values.holdUnit === "minutes" ? values.holdTime / 60 : values.holdTime;
+    saveValues(values);
+    renderWarnings(buildWarnings(values));
+    parameterList.textContent = parameterText(values, dwellHours);
+    renderConversion(values, dwellHours);
+    renderClickList(values, dwellHours);
+    renderVerify(values, dwellHours);
+    renderEta(values);
+  }
+
+  function handleInput(event) {
+    if (event.target === fields.naturalInput) {
+      applyParsedText();
+    }
+    renderAll();
+  }
+
+  function applyPreset(button) {
+    fields.targetTemp.value = button.dataset.presetTemp;
+    fields.holdTime.value = button.dataset.presetTime;
+    fields.holdUnit.value = button.dataset.presetUnit;
+    fields.naturalInput.value = button.textContent.replace(",", " for");
+    applyParsedText();
+    renderAll();
+  }
+
+  setFields(Object.assign({}, defaults, readStoredValues()));
+  applyParsedText();
+  renderAll();
+
+  Object.keys(fields).forEach(function (key) {
+    fields[key].addEventListener("input", handleInput);
+    fields[key].addEventListener("change", handleInput);
+  });
+
+  document.querySelectorAll(".preset").forEach(function (button) {
+    button.addEventListener("click", function () {
+      applyPreset(button);
+    });
+  });
+})();
+
+    </script>
+  </body>
+</html>

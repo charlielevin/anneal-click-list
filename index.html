@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#f7c948">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Anneal List">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>Anneal Click-List</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="page-header">
+        <p class="eyebrow">Lindberg furnace helper</p>
+        <h1>Anneal Click-List</h1>
+        <p class="subtitle">Enter the anneal you want, then follow the exact controller settings and button sequence.</p>
+      </header>
+
+      <section class="safety-box" aria-label="Safety warning">
+        <h2>Safety</h2>
+        <p>Confirm your lab SOP, O2 flow, tube, boat, sample, and furnace rating before running.</p>
+        <p>Do not leave unattended unless your lab allows it.</p>
+        <p>For oxygen anneals, do not change O2 flow unless the lab procedure says to.</p>
+      </section>
+
+      <section class="section-card" aria-labelledby="want-heading">
+        <div class="section-heading">
+          <span class="section-number">1</span>
+          <h2 id="want-heading">What do you want?</h2>
+        </div>
+
+        <label class="field field-wide" for="naturalInput">
+          <span>Natural text</span>
+          <input id="naturalInput" type="text" inputmode="text" autocomplete="off" placeholder="900C for 2 hr">
+        </label>
+
+        <div class="preset-grid" aria-label="Quick presets">
+          <button type="button" class="preset" data-preset-temp="700" data-preset-time="1" data-preset-unit="hours">700C, 1 hr</button>
+          <button type="button" class="preset" data-preset-temp="900" data-preset-time="2" data-preset-unit="hours">900C, 2 hr</button>
+          <button type="button" class="preset" data-preset-temp="950" data-preset-time="1" data-preset-unit="hours">950C, 1 hr</button>
+          <button type="button" class="preset" data-preset-temp="1200" data-preset-time="30" data-preset-unit="minutes">1200C, 30 min</button>
+        </div>
+
+        <div id="parseStatus" class="status-note" role="status" aria-live="polite"></div>
+
+        <div class="manual-grid">
+          <label class="field" for="targetTemp">
+            <span>Target PL1 (C)</span>
+            <input id="targetTemp" type="number" inputmode="decimal" min="0" step="1">
+          </label>
+
+          <label class="field" for="holdTime">
+            <span>Hold time</span>
+            <input id="holdTime" type="number" inputmode="decimal" min="0" step="0.1">
+          </label>
+
+          <label class="field" for="holdUnit">
+            <span>Hold unit</span>
+            <select id="holdUnit">
+              <option value="hours">hours</option>
+              <option value="minutes">minutes</option>
+            </select>
+          </label>
+
+          <label class="field" for="rampRate">
+            <span>Ramp Pr1/Pr2 (C/min)</span>
+            <input id="rampRate" type="number" inputmode="decimal" min="0" step="0.1">
+          </label>
+
+          <label class="field" for="cooldownTarget">
+            <span>Cooldown PL2 (C)</span>
+            <input id="cooldownTarget" type="number" inputmode="decimal" step="1">
+          </label>
+
+          <label class="field" for="programNumber">
+            <span>Program Pnr</span>
+            <input id="programNumber" type="number" inputmode="numeric" min="1" step="1">
+          </label>
+
+          <label class="field" for="currentPv">
+            <span>Current PV (C)</span>
+            <input id="currentPv" type="number" inputmode="decimal" step="1">
+          </label>
+        </div>
+      </section>
+
+      <section id="warnings" class="warning-list" aria-live="polite"></section>
+
+      <section class="section-card" aria-labelledby="params-heading">
+        <div class="section-heading">
+          <span class="section-number">2</span>
+          <h2 id="params-heading">Exact Parameter List</h2>
+        </div>
+        <pre id="parameterList" class="parameter-output"></pre>
+        <div id="conversionNote" class="conversion-note"></div>
+      </section>
+
+      <section class="section-card" aria-labelledby="click-heading">
+        <div class="section-heading">
+          <span class="section-number">3</span>
+          <h2 id="click-heading">Full Button-by-Button Click List</h2>
+        </div>
+        <ol id="clickList" class="click-list"></ol>
+      </section>
+
+      <section class="section-card" aria-labelledby="verify-heading">
+        <div class="section-heading">
+          <span class="section-number">4</span>
+          <h2 id="verify-heading">Verify While Running</h2>
+        </div>
+        <div id="verifyList" class="verify-copy"></div>
+      </section>
+
+      <section class="section-card" aria-labelledby="eta-heading">
+        <div class="section-heading">
+          <span class="section-number">5</span>
+          <h2 id="eta-heading">ETA Tool</h2>
+        </div>
+        <div id="etaOutput" class="eta-output"></div>
+        <p class="plain-note">Actual furnace heating can be slower at high temperature, so this is an ideal estimate.</p>
+      </section>
+
+      <section class="section-card" aria-labelledby="reference-heading">
+        <div class="section-heading">
+          <span class="section-number">6</span>
+          <h2 id="reference-heading">Button Reference</h2>
+        </div>
+        <dl class="button-reference">
+          <div><dt>P</dt><dd>enter/advance programming screens</dd></div>
+          <div><dt>Up / Down</dt><dd>change values</dd></div>
+          <div><dt>RUN/HOLD</dt><dd>start or hold program</dd></div>
+          <div><dt>Center display button</dt><dd>view status screens only; it is the paper/hand icon button</dd></div>
+        </dl>
+        <p class="home-note">To install on iPhone: Share -> Add to Home Screen.</p>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
