@@ -4,8 +4,8 @@
   "description": "Phone-friendly Lindberg furnace anneal parameter and click-list helper.",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#f6f4ee",
-  "theme_color": "#f7c948",
+  "background_color": "#f7f7f5",
+  "theme_color": "#171717",
   "icons": [
     {
       "src": "icon.svg",
