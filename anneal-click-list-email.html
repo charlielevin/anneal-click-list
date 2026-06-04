@@ -115,6 +115,45 @@ h2 {
   margin-bottom: 8px;
 }
 
+.safety-checklist {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 12px;
+  padding: 0;
+  list-style: none;
+}
+
+.safety-checklist li {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 8px;
+  align-items: start;
+  color: #2f2a1d;
+  font-weight: 750;
+}
+
+.checkmark {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  margin-top: 2px;
+  border: 1px solid #8d835f;
+  border-radius: 6px;
+  background: #ffffff;
+}
+
+.checkmark::after {
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 6px;
+  height: 11px;
+  border: solid var(--ink);
+  border-width: 0 2px 2px 0;
+  content: "";
+  transform: rotate(45deg);
+}
+
 .safety-box p {
   margin-bottom: 6px;
   color: #423a28;
@@ -367,11 +406,15 @@ h2 {
         <p class="subtitle">Enter the anneal you want, then follow the exact controller settings and button sequence.</p>
       </header>
 
-      <section class="safety-box" aria-label="Safety warning">
-        <h2>Safety</h2>
-        <p>Confirm your lab SOP, O2 flow, tube, boat, sample, and furnace rating before running.</p>
+      <section class="safety-box" aria-label="Safety checklist">
+        <h2>Safety Checklist</h2>
+        <ul class="safety-checklist">
+          <li><span class="checkmark" aria-hidden="true"></span><span>Boat confirmed.</span></li>
+          <li><span class="checkmark" aria-hidden="true"></span><span>O2 flow set to 3.</span></li>
+          <li><span class="checkmark" aria-hidden="true"></span><span>Tube confirmed.</span></li>
+          <li><span class="checkmark" aria-hidden="true"></span><span>Furnace rating confirmed.</span></li>
+        </ul>
         <p>Do not leave unattended unless your lab allows it.</p>
-        <p>For oxygen anneals, do not change O2 flow unless the lab procedure says to.</p>
       </section>
 
       <section class="section-card" aria-labelledby="want-heading">
