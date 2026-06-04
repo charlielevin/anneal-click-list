@@ -2,6 +2,7 @@
   "use strict";
 
   var storageKey = "anneal-click-list-values-v1";
+  var safetyStorageKey = "anneal-click-list-safety-v1";
   var defaults = {
     naturalInput: "900C for 2 hr",
     targetTemp: 900,
@@ -31,6 +32,7 @@
   var clickList = document.getElementById("clickList");
   var verifyList = document.getElementById("verifyList");
   var etaOutput = document.getElementById("etaOutput");
+  var safetyChecks = Array.from(document.querySelectorAll(".safety-check"));
 
   function readStoredValues() {
     try {
@@ -65,6 +67,32 @@
     } catch (error) {
       // The app still works if storage is blocked.
     }
+  }
+
+  function readSafetyChecks() {
+    try {
+      var stored = JSON.parse(localStorage.getItem(safetyStorageKey));
+      return stored && typeof stored === "object" ? stored : {};
+    } catch (error) {
+      return {};
+    }
+  }
+
+  function saveSafetyChecks() {
+    var state = {};
+    safetyChecks.forEach(function (check) {
+      state[check.dataset.safetyKey] = check.checked;
+    });
+    try {
+      localStorage.setItem(safetyStorageKey, JSON.stringify(state));
+    } catch (error) {}
+  }
+
+  function restoreSafetyChecks() {
+    var state = readSafetyChecks();
+    safetyChecks.forEach(function (check) {
+      check.checked = Boolean(state[check.dataset.safetyKey]);
+    });
   }
 
   function setFields(values) {
@@ -285,6 +313,7 @@
   }
 
   setFields(Object.assign({}, defaults, readStoredValues()));
+  restoreSafetyChecks();
   applyParsedText();
   renderAll();
 
@@ -297,5 +326,9 @@
     button.addEventListener("click", function () {
       applyPreset(button);
     });
+  });
+
+  safetyChecks.forEach(function (check) {
+    check.addEventListener("change", saveSafetyChecks);
   });
 })();

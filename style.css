@@ -113,34 +113,31 @@ h2 {
 }
 
 .safety-checklist li {
-  display: grid;
-  grid-template-columns: 24px 1fr;
-  gap: 8px;
-  align-items: start;
   color: #2f2a1d;
   font-weight: 750;
 }
 
-.checkmark {
-  position: relative;
-  width: 22px;
-  height: 22px;
-  margin-top: 2px;
-  border: 1px solid #8d835f;
-  border-radius: 6px;
-  background: #ffffff;
+.safety-checklist label {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 10px;
+  align-items: start;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: 8px;
 }
 
-.checkmark::after {
-  position: absolute;
-  left: 6px;
-  top: 2px;
-  width: 6px;
-  height: 11px;
-  border: solid var(--ink);
-  border-width: 0 2px 2px 0;
-  content: "";
-  transform: rotate(45deg);
+.safety-checklist label:has(input:checked) {
+  border-color: #d8c99d;
+  background: #fffaf0;
+}
+
+.safety-check {
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  accent-color: var(--ink);
 }
 
 .safety-box p {
