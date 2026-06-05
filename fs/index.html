@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#171717">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="FS">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>FS</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-180.png">
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f7f7f5;
+        --surface: #ffffff;
+        --ink: #171717;
+        --muted: #666666;
+        --border: #deded9;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        -webkit-text-size-adjust: 100%;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+        font-size: 18px;
+        line-height: 1.45;
+      }
+
+      main {
+        display: grid;
+        width: min(100%, 520px);
+        min-height: 100vh;
+        margin: 0 auto;
+        padding: 22px 16px calc(36px + env(safe-area-inset-bottom));
+        place-items: center;
+      }
+
+      .panel {
+        width: 100%;
+        padding: 22px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: var(--surface);
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.05);
+      }
+
+      .icon {
+        display: grid;
+        width: 72px;
+        height: 72px;
+        margin-bottom: 18px;
+        place-items: center;
+        border-radius: 18px;
+        background: var(--ink);
+        color: #ffffff;
+        font-size: 1.7rem;
+        font-weight: 850;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: 2.2rem;
+        line-height: 1.05;
+        letter-spacing: 0;
+      }
+
+      p {
+        margin: 0 0 16px;
+        color: var(--muted);
+        font-weight: 650;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .button {
+        display: grid;
+        min-height: 54px;
+        width: 100%;
+        place-items: center;
+        border-radius: 8px;
+        background: var(--ink);
+        color: #ffffff;
+        font-weight: 850;
+        text-decoration: none;
+      }
+
+      .note {
+        margin-top: 14px;
+        margin-bottom: 0;
+        font-size: 0.95rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="panel" aria-label="FS shortcut">
+        <div class="icon" aria-hidden="true">FS</div>
+        <h1>FS</h1>
+        <p>Open the spreadsheet from this phone shortcut.</p>
+        <a id="openLink" class="button" href="https://docs.google.com/spreadsheets/d/1Yaxg02kO-hpJ99vYWFDBDO_m_tfg5jpgGTYPdU11AQw/edit?pli=1&amp;gid=0#gid=0">Open FS</a>
+        <p class="note">To make the phone icon: Share -> Add to Home Screen -> name it FS.</p>
+      </section>
+    </main>
+
+    <script>
+      (function () {
+        "use strict";
+
+        var sheetUrl = "https://docs.google.com/spreadsheets/d/1Yaxg02kO-hpJ99vYWFDBDO_m_tfg5jpgGTYPdU11AQw/edit?pli=1&gid=0#gid=0";
+        var isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone;
+        if (isStandalone) {
+          window.location.replace(sheetUrl);
+        }
+      })();
+    </script>
+  </body>
+</html>
